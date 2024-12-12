@@ -16,6 +16,8 @@ internal sealed class ForwardOptions
     public int ForwardPort { get; set; }
 
     public string? ForwardAddress { get; set; }
+
+    public bool IsForward { get; set; }
     
     public string? ForwardName { get; set; }
 

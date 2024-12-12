@@ -26,7 +26,7 @@ internal sealed class KestrelOptionsSetup(IConfiguration configuration,ForwardOp
             if (string.IsNullOrEmpty(forwardOptions.ForwardAddress) ||
                 !IPAddress.TryParse(forwardOptions.ForwardAddress, out var forwardAddress))
                 continue;
-
+            
             forwardOptions.ForwardIpAddress = forwardAddress;
             forwardOptions.ForwardName = name;
             forwardOptions.ForwardPort = port;
@@ -34,8 +34,16 @@ internal sealed class KestrelOptionsSetup(IConfiguration configuration,ForwardOp
 
             db.AddOption(forwardOptions);
             
-            kestrelConfigLoad.Endpoint(forwardOptions.ForwardName,
-                endpoint => endpoint.ListenOptions.UseConnectionHandler<ForwardConnectionHandler>());
+            if (forwardOptions.IsForward)
+            {
+                kestrelConfigLoad.Endpoint(forwardOptions.ForwardName,
+                    endpoint => endpoint.ListenOptions.UseConnectionHandler<ForwardConnectionHandler>());
+            }
+            else
+            {
+                kestrelConfigLoad.Endpoint(forwardOptions.ForwardName,
+                    endpoint => endpoint.ListenOptions.UseConnectionHandler<TelnetConnectionHandler>());
+            }
         }
     }
 }
