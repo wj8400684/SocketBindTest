@@ -1,8 +1,8 @@
+using System.Collections.Concurrent;
 using System.IO.Pipelines;
 using System.Net;
 using System.Net.Security;
 using System.Net.Sockets;
-using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Connections;
 
@@ -12,7 +12,8 @@ internal sealed class TelnetConnectionHandler : ConnectionHandler
 {
     private readonly List<IPAddress> _ipAddresses;
     private readonly ILogger<TelnetConnectionHandler> _logger;
-    private readonly DnsEndPoint _remoteEndPoint = new("www.bejson.com", 443, AddressFamily.InterNetwork);
+    private readonly ConcurrentDictionary<string, ConnectionContext> _connections = new();
+    private readonly DnsEndPoint _remoteEndPoint = new("192.168.124.51", 27727, AddressFamily.InterNetwork);
 
     public TelnetConnectionHandler(ILogger<TelnetConnectionHandler> logger)
     {
@@ -47,15 +48,16 @@ internal sealed class TelnetConnectionHandler : ConnectionHandler
         }
 
         var address = localEndPoint.Address.MapToIPv4();
-        
+
         _logger.LogInformation("新连接，远程地址-{RemoteEndPoint}-{LocalEndPoint}", connection.RemoteEndPoint,
             connection.LocalEndPoint);
 
-        var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        using var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
         try
         {
             socket.ExclusiveAddressUse = false;
+            socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
             socket.Bind(new IPEndPoint(address, port));
         }
         catch (Exception e)
@@ -80,15 +82,41 @@ internal sealed class TelnetConnectionHandler : ConnectionHandler
             return;
         }
 
-        Stream stream = new NetworkStream(socket, true);
+        Stream stream = new NetworkStream(socket, false);
+
+        // if (_remoteEndPoint.Port == 443) 
+        // { 
+        //     var ssl = new SslStream(stream, false);
+
+        //     try
+        //     {
+        //         await ssl.AuthenticateAsClientAsync(new SslClientAuthenticationOptions
+        //         {
+        //             TargetHost = _remoteEndPoint.Host,
+        //             RemoteCertificateValidationCallback = OnRemoteCertificateValidationCallback,
+        //             LocalCertificateSelectionCallback = OnLocalCertificateSelectionCallback,
+        //         }, cancellationTokenSource.Token);
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         _logger.LogError(ex,"ssl验证失败-{RemoteEndPoint}-{LocalEndPoint}", connection.RemoteEndPoint,
+        //connection.LocalEndPoint);
+        //         return;
+        //     }
+
+        //     stream = ssl;
+        // }
 
         _logger.LogInformation("开始传输数据-{RemoteEndPoint}-{LocalEndPoint}", connection.RemoteEndPoint,
             connection.LocalEndPoint);
 
+        _connections.TryAdd(connection.ConnectionId, connection);
+
         try
         {
-            await connection.Transport.Input.CopyToAsync(stream, CancellationToken.None);
-            await stream.CopyToAsync(connection.Transport.Output, CancellationToken.None);
+            var task = connection.Transport.Input.CopyToAsync(stream, CancellationToken.None);
+            var task1 = stream.CopyToAsync(connection.Transport.Output, CancellationToken.None);
+            await Task.WhenAny(task, task1);
         }
         catch (Exception e)
         {
@@ -96,8 +124,18 @@ internal sealed class TelnetConnectionHandler : ConnectionHandler
         }
         finally
         {
-            _logger.LogWarning("断开连接啦，远程地址-{RemoteEndPoint}-{LocalEndPoint}", connection.RemoteEndPoint,
-                connection.LocalEndPoint);
+            try
+            {
+                socket.Shutdown(SocketShutdown.Both);
+            }
+            catch
+            {
+                //
+            }
+
+            _connections.TryRemove(connection.ConnectionId, out _);
+            _logger.LogWarning("断开连接啦，远程地址-{RemoteEndPoint}-{LocalEndPoint}-连接数-{Count}", connection.RemoteEndPoint,
+                connection.LocalEndPoint, _connections.Count);
         }
     }
 
