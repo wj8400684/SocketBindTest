@@ -5,19 +5,23 @@ using System.Net.Security;
 using System.Net.Sockets;
 using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Connections;
+using Microsoft.Extensions.Options;
 
 namespace SocketBindTest.Server;
 
 internal sealed class TelnetConnectionHandler : ConnectionHandler
 {
+    private readonly ForwardOptions _forwardOptions;
     private readonly List<IPAddress> _ipAddresses;
     private readonly ILogger<TelnetConnectionHandler> _logger;
     private readonly ConcurrentDictionary<string, ConnectionContext> _connections = new();
-    private readonly DnsEndPoint _remoteEndPoint = new("192.168.124.51", 27727, AddressFamily.InterNetwork);
+    private readonly IPEndPoint _remoteEndPoint;
 
-    public TelnetConnectionHandler(ILogger<TelnetConnectionHandler> logger)
+    public TelnetConnectionHandler(IOptions<ForwardOptions> options, ILogger<TelnetConnectionHandler> logger)
     {
         _logger = logger;
+        _forwardOptions = options.Value;
+        _remoteEndPoint = new IPEndPoint(_forwardOptions.ForwardIpAddress!, _forwardOptions.ForwardPort);
         _ipAddresses = Dns.GetHostAddresses(Dns.GetHostName())
             .Where(address => address.AddressFamily == AddressFamily.InterNetwork).ToList();
 
