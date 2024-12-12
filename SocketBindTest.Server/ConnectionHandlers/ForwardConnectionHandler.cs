@@ -51,8 +51,8 @@ internal sealed class ForwardConnectionHandler : ConnectionHandler
 
         var address = localEndPoint.Address.MapToIPv4();
 
-        _logger.LogInformation("新连接，远程地址-{RemoteEndPoint}-{LocalEndPoint}-连接数-{Count}", connection.RemoteEndPoint,
-            connection.LocalEndPoint, _connections.Count);
+        _logger.LogInformation("新连接，远程地址-{RemoteEndPoint}-{LocalEndPoint}", connection.RemoteEndPoint,
+            connection.LocalEndPoint);
 
         using var socket = new Socket(_remoteEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
@@ -85,15 +85,14 @@ internal sealed class ForwardConnectionHandler : ConnectionHandler
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "连接远程服务器失败，远程地址-{RemoteEndPoint}-{LocalEndPoint}", connection.RemoteEndPoint,
-                connection.LocalEndPoint);
+            _logger.LogError(ex, "连接远程服务器失败，远程地址-{RemoteEndPoint}", _remoteEndPoint);
             return;
         }
 
         Stream stream = new NetworkStream(socket, false);
 
-        _logger.LogInformation("开始传输数据-{RemoteEndPoint}-{LocalEndPoint}", connection.RemoteEndPoint,
-            connection.LocalEndPoint);
+        _logger.LogInformation("开始传输数据-{RemoteEndPoint}-{LocalEndPoint}-{Count}", connection.RemoteEndPoint,
+            connection.LocalEndPoint, _connections.Count);
 
         _connections.TryAdd(connection.ConnectionId, connection);
 
