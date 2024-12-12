@@ -19,23 +19,18 @@ internal sealed class KestrelOptionsSetup(IConfiguration configuration,ForwardOp
             var name = section.Key;
             var url = section.GetValue<string>("Url");
             var port = section.GetValue<int>("ForwardPort");
-            if (port == 0)
-                continue;
-
             var forwardOptions = ForwardOptions.Load(section);
-            if (string.IsNullOrEmpty(forwardOptions.ForwardAddress) ||
-                !IPAddress.TryParse(forwardOptions.ForwardAddress, out var forwardAddress))
-                continue;
-            
-            forwardOptions.ForwardIpAddress = forwardAddress;
+          
             forwardOptions.ForwardName = name;
             forwardOptions.ForwardPort = port;
             forwardOptions.ListenUrl = url;
-
-            db.AddOption(forwardOptions);
-            
-            if (forwardOptions.IsForward)
+           
+            if (!string.IsNullOrEmpty(forwardOptions.ForwardAddress) &&
+                IPAddress.TryParse(forwardOptions.ForwardAddress, out var forwardAddress))
             {
+                forwardOptions.ForwardIpAddress = forwardAddress;
+                db.AddOption(forwardOptions);
+            
                 kestrelConfigLoad.Endpoint(forwardOptions.ForwardName,
                     endpoint => endpoint.ListenOptions.UseConnectionHandler<ForwardConnectionHandler>());
             }

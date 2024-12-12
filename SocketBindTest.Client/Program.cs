@@ -6,7 +6,7 @@ using SuperSocket.Connection;
 using SuperSocket.ProtoBase;
 
 int count = 0;
-var remo = new IPEndPoint(IPAddress.Parse("192.168.1.149"), 9090);
+var remo = new IPEndPoint(IPAddress.Parse("192.168.1.149"), 8888);
 
 var client = new HttpClient();
 client.BaseAddress = new Uri("http://192.168.1.149:9090");
