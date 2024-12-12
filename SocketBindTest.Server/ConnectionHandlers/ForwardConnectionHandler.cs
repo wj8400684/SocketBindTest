@@ -51,8 +51,8 @@ internal sealed class ForwardConnectionHandler : ConnectionHandler
 
         var address = localEndPoint.Address.MapToIPv4();
 
-        _logger.LogInformation("新连接，远程地址-{RemoteEndPoint}-{LocalEndPoint}", connection.RemoteEndPoint,
-            connection.LocalEndPoint);
+        _logger.LogInformation("新连接，远程地址-{RemoteEndPoint}-{LocalEndPoint}-连接数-{Count}", connection.RemoteEndPoint,
+            connection.LocalEndPoint, _connections.Count);
 
         using var socket = new Socket(_remoteEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
