@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SocketBindTest.Client", "So
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication1", "WebApplication1\WebApplication1.csproj", "{7DB8C264-AA71-41D5-9EFA-D9E0000330A0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuperSocket.ServerBind", "SuperSocket.ServerBind\SuperSocket.ServerBind.csproj", "{97ACC4D1-E82B-458E-A73F-0BF3C69CAE5F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{7DB8C264-AA71-41D5-9EFA-D9E0000330A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7DB8C264-AA71-41D5-9EFA-D9E0000330A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7DB8C264-AA71-41D5-9EFA-D9E0000330A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97ACC4D1-E82B-458E-A73F-0BF3C69CAE5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97ACC4D1-E82B-458E-A73F-0BF3C69CAE5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97ACC4D1-E82B-458E-A73F-0BF3C69CAE5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97ACC4D1-E82B-458E-A73F-0BF3C69CAE5F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
