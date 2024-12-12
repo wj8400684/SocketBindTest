@@ -16,10 +16,10 @@ internal sealed class TelnetConnectionHandler : ConnectionHandler
     private readonly ConcurrentDictionary<string, ConnectionContext> _connections = new();
     private readonly IPEndPoint _remoteEndPoint;
 
-    public TelnetConnectionHandler(IOptions<ForwardOptions> options, ILogger<TelnetConnectionHandler> logger)
+    public TelnetConnectionHandler(ForwardOptionsDb db, ILogger<TelnetConnectionHandler> logger)
     {
         _logger = logger;
-        var forwardOptions = options.Value;
+        var forwardOptions = db.Finds().First();
         _remoteEndPoint = new IPEndPoint(forwardOptions.ForwardIpAddress!, forwardOptions.ForwardPort);
         _ipAddresses = Dns.GetHostAddresses(Dns.GetHostName())
             .Where(address => address.AddressFamily == AddressFamily.InterNetwork).ToList();

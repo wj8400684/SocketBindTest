@@ -5,7 +5,7 @@ using Microsoft.Extensions.Options;
 
 namespace SocketBindTest.Server;
 
-internal sealed class KestrelOptionsSetup(IConfiguration configuration)
+internal sealed class KestrelOptionsSetup(IConfiguration configuration,ForwardOptionsDb db)
     : IConfigureOptions<KestrelServerOptions>
 {
     public void Configure(KestrelServerOptions options)
@@ -32,6 +32,8 @@ internal sealed class KestrelOptionsSetup(IConfiguration configuration)
             forwardOptions.ForwardPort = port;
             forwardOptions.ListenUrl = url;
 
+            db.AddOption(forwardOptions);
+            
             kestrelConfigLoad.Endpoint(forwardOptions.ForwardName,
                 endpoint => endpoint.ListenOptions.UseConnectionHandler<TelnetConnectionHandler>());
         }
