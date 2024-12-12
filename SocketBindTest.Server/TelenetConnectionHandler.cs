@@ -11,7 +11,6 @@ namespace SocketBindTest.Server;
 
 internal sealed class TelnetConnectionHandler : ConnectionHandler
 {
-    private readonly ForwardOptions _forwardOptions;
     private readonly List<IPAddress> _ipAddresses;
     private readonly ILogger<TelnetConnectionHandler> _logger;
     private readonly ConcurrentDictionary<string, ConnectionContext> _connections = new();
@@ -20,8 +19,8 @@ internal sealed class TelnetConnectionHandler : ConnectionHandler
     public TelnetConnectionHandler(IOptions<ForwardOptions> options, ILogger<TelnetConnectionHandler> logger)
     {
         _logger = logger;
-        _forwardOptions = options.Value;
-        _remoteEndPoint = new IPEndPoint(_forwardOptions.ForwardIpAddress!, _forwardOptions.ForwardPort);
+        var forwardOptions = options.Value;
+        _remoteEndPoint = new IPEndPoint(forwardOptions.ForwardIpAddress!, forwardOptions.ForwardPort);
         _ipAddresses = Dns.GetHostAddresses(Dns.GetHostName())
             .Where(address => address.AddressFamily == AddressFamily.InterNetwork).ToList();
 
