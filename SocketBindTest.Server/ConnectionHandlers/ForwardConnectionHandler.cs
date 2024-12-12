@@ -54,7 +54,7 @@ internal sealed class ForwardConnectionHandler : ConnectionHandler
         _logger.LogInformation("新连接，远程地址-{RemoteEndPoint}-{LocalEndPoint}", connection.RemoteEndPoint,
             connection.LocalEndPoint);
 
-        using var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+        using var socket = new Socket(_remoteEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
         try
         {
@@ -62,9 +62,15 @@ internal sealed class ForwardConnectionHandler : ConnectionHandler
             socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
             socket.Bind(new IPEndPoint(address, port));
         }
+        catch (SocketException ex) when (ex.SocketErrorCode == SocketError.AddressAlreadyInUse)
+        {
+            _logger.LogError(ex, "绑定ip失败，远程地址-{RemoteEndPoint}-{LocalEndPoint}", connection.RemoteEndPoint,
+                connection.LocalEndPoint);
+            return;
+        }
         catch (Exception e)
         {
-            _logger.LogError(e, "绑定ip失败，远程地址-{RemoteEndPoint}-{LocalEndPoint}", connection.RemoteEndPoint,
+            _logger.LogError(e, "设置socket参数失败未知错误-{RemoteEndPoint}-{LocalEndPoint}", connection.RemoteEndPoint,
                 connection.LocalEndPoint);
             return;
         }
@@ -86,6 +92,45 @@ internal sealed class ForwardConnectionHandler : ConnectionHandler
 
         Stream stream = new NetworkStream(socket, false);
 
+        _logger.LogInformation("开始传输数据-{RemoteEndPoint}-{LocalEndPoint}", connection.RemoteEndPoint,
+            connection.LocalEndPoint);
+
+        _connections.TryAdd(connection.ConnectionId, connection);
+
+        try
+        {
+            var task = connection.Transport.Input.CopyToAsync(stream, CancellationToken.None);
+            var task1 = stream.CopyToAsync(connection.Transport.Output, CancellationToken.None);
+            await Task.WhenAny(task, task1);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "ip不正确");
+        }
+
+        try
+        {
+            socket.Shutdown(SocketShutdown.Both);
+        }
+        catch
+        {
+            //
+        }
+
+        _connections.TryRemove(connection.ConnectionId, out _);
+        _logger.LogWarning("断开连接啦，远程地址-{RemoteEndPoint}-{LocalEndPoint}-连接数-{Count}", connection.RemoteEndPoint,
+            connection.LocalEndPoint, _connections.Count);
+    }
+
+    private bool OnRemoteCertificateValidationCallback(object sender, X509Certificate? certificate, X509Chain? chain,
+        SslPolicyErrors sslPolicyErrors)
+    {
+        return true;
+    }
+
+    private X509Certificate OnLocalCertificateSelectionCallback(object sender, string targetHost,
+        X509CertificateCollection localCertificates, X509Certificate? remoteCertificate, string[] acceptableIssuers)
+    {
         // if (_remoteEndPoint.Port == 443) 
         // { 
         //     var ssl = new SslStream(stream, false);
@@ -109,47 +154,6 @@ internal sealed class ForwardConnectionHandler : ConnectionHandler
         //     stream = ssl;
         // }
 
-        _logger.LogInformation("开始传输数据-{RemoteEndPoint}-{LocalEndPoint}", connection.RemoteEndPoint,
-            connection.LocalEndPoint);
-
-        _connections.TryAdd(connection.ConnectionId, connection);
-
-        try
-        {
-            var task = connection.Transport.Input.CopyToAsync(stream, CancellationToken.None);
-            var task1 = stream.CopyToAsync(connection.Transport.Output, CancellationToken.None);
-            await Task.WhenAny(task, task1);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "ip不正确");
-        }
-        finally
-        {
-            try
-            {
-                socket.Shutdown(SocketShutdown.Both);
-            }
-            catch
-            {
-                //
-            }
-
-            _connections.TryRemove(connection.ConnectionId, out _);
-            _logger.LogWarning("断开连接啦，远程地址-{RemoteEndPoint}-{LocalEndPoint}-连接数-{Count}", connection.RemoteEndPoint,
-                connection.LocalEndPoint, _connections.Count);
-        }
-    }
-
-    private bool OnRemoteCertificateValidationCallback(object sender, X509Certificate? certificate, X509Chain? chain,
-        SslPolicyErrors sslPolicyErrors)
-    {
-        return true;
-    }
-
-    private X509Certificate OnLocalCertificateSelectionCallback(object sender, string targetHost,
-        X509CertificateCollection localCertificates, X509Certificate? remoteCertificate, string[] acceptableIssuers)
-    {
         return null;
     }
 }

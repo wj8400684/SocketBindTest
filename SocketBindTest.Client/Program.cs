@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using System.Net.Sockets;
 using System.Text;
 using SuperSocket.Client;
 using SuperSocket.Connection;
@@ -23,7 +22,6 @@ Console.WriteLine($"Rounds:{rounds.Length}");
 Console.ReadKey();
 
 
-
 async Task<int> RunConnectionAsync()
 {
     //var response = await client.GetAsync("/todos/");
@@ -39,13 +37,9 @@ async Task<int> RunConnectionAsync()
         var connection = state.CreateConnection(new ConnectionOptions());
         Console.WriteLine($"Connected to {remo}-{count}");
         count++;
-        // for (int i = 0; i < 10; i++)
-        // {
-        //     await connection.SendAsync(Encoding.UTF8.GetBytes("Hello World"));
-        //
-        //     await Task.Delay(1000);
-        // }
-
+      
+        await connection.SendAsync("Hello\r\n"u8.ToArray());
+        
         await foreach (var pack in connection.RunAsync(new LinePipelineFilter()))
         {
             Console.WriteLine(pack.Text);
@@ -57,7 +51,6 @@ async Task<int> RunConnectionAsync()
         return -1;
     }
 
-    
 
     return 0;
 }
