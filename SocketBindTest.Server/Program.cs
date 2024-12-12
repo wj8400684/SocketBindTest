@@ -1,6 +1,6 @@
 using SocketBindTest.Server;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateSlimBuilder(args);
 
 builder.Services.AddSingleton<ForwardOptionsDb>();
 builder.Services.AddOptions<ForwardOptions>();
