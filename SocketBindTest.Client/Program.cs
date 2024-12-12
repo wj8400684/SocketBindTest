@@ -24,37 +24,37 @@ Console.ReadKey();
 
 async Task<int> RunConnectionAsync()
 {
-    //var response = await client.GetAsync("/todos/");
-    //var content = await response.Content.ReadAsStringAsync();
-    //Console.WriteLine(content);
+    var response = await client.GetAsync("/todos/");
+    var content = await response.Content.ReadAsStringAsync();
+    Console.WriteLine(content);
 
-    IConnector connector = new SocketConnector();
-
-    try
-    {
-        var state = await connector.ConnectAsync(remo);
-        if (!state.Result)
-        {
-            Console.WriteLine("Failed to connect to server.");
-            return -1;
-        }
-        
-        var connection = state.CreateConnection(new ConnectionOptions());
-        Console.WriteLine($"Connected to {remo}-{count}");
-        count++;
-      
-        //await connection.SendAsync("Hello\r\n"u8.ToArray());
-        
-        await foreach (var pack in connection.RunAsync(new LinePipelineFilter()))
-        {
-            Console.WriteLine(pack.Text);
-        }
-    }
-    catch (Exception e)
-    {
-        Console.WriteLine(e);
-        return -1;
-    }
+    // IConnector connector = new SocketConnector();
+    //
+    // try
+    // {
+    //     var state = await connector.ConnectAsync(remo);
+    //     if (!state.Result)
+    //     {
+    //         Console.WriteLine("Failed to connect to server.");
+    //         return -1;
+    //     }
+    //     
+    //     var connection = state.CreateConnection(new ConnectionOptions());
+    //     Console.WriteLine($"Connected to {remo}-{count}");
+    //     count++;
+    //   
+    //     //await connection.SendAsync("Hello\r\n"u8.ToArray());
+    //     
+    //     await foreach (var pack in connection.RunAsync(new LinePipelineFilter()))
+    //     {
+    //         Console.WriteLine(pack.Text);
+    //     }
+    // }
+    // catch (Exception e)
+    // {
+    //     Console.WriteLine(e);
+    //     return -1;
+    // }
 
 
     return 0;

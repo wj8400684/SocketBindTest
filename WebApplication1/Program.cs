@@ -1,6 +1,12 @@
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets;
 
 var builder = WebApplication.CreateSlimBuilder(args);
+
+builder.Services.Configure<SocketTransportOptions>(options => 
+{
+    options.Backlog = 65535;
+});
 
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
