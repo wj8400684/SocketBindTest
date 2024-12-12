@@ -70,7 +70,7 @@ internal sealed class TelnetConnectionHandler : ConnectionHandler
             return;
         }
 
-        using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(15));
+        using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(60));
         using var cancellationTokenSource =
             CancellationTokenSource.CreateLinkedTokenSource(connection.ConnectionClosed, timeout.Token);
 
