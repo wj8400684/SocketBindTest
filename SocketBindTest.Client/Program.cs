@@ -5,6 +5,7 @@ using SuperSocket.Client;
 using SuperSocket.Connection;
 using SuperSocket.ProtoBase;
 
+int count = 0;
 var remo = new IPEndPoint(IPAddress.Parse("192.168.1.149"), 9090);
 
 var client = new HttpClient();
@@ -21,6 +22,8 @@ Console.WriteLine($"Rounds:{rounds.Length}");
 
 Console.ReadKey();
 
+
+
 async Task<int> RunConnectionAsync()
 {
     //var response = await client.GetAsync("/todos/");
@@ -29,22 +32,32 @@ async Task<int> RunConnectionAsync()
 
     IConnector connector = new SocketConnector();
 
-    var state = await connector.ConnectAsync(remo);
-
-    var connection = state.CreateConnection(new ConnectionOptions());
-
-    // for (int i = 0; i < 10; i++)
-    // {
-    //     await connection.SendAsync(Encoding.UTF8.GetBytes("Hello World"));
-    //
-    //     await Task.Delay(1000);
-    // }
-
-    await foreach (var pack in connection.RunAsync(new LinePipelineFilter()))
+    try
     {
-        Console.WriteLine(pack.Text);
+        var state = await connector.ConnectAsync(remo);
+
+        var connection = state.CreateConnection(new ConnectionOptions());
+        Console.WriteLine($"Connected to {remo}-{count}");
+        count++;
+        // for (int i = 0; i < 10; i++)
+        // {
+        //     await connection.SendAsync(Encoding.UTF8.GetBytes("Hello World"));
+        //
+        //     await Task.Delay(1000);
+        // }
+
+        await foreach (var pack in connection.RunAsync(new LinePipelineFilter()))
+        {
+            Console.WriteLine(pack.Text);
+        }
+    }
+    catch (Exception e)
+    {
+        Console.WriteLine(e);
+        return -1;
     }
 
+    
 
     return 0;
 }

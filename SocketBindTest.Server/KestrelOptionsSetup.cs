@@ -35,7 +35,7 @@ internal sealed class KestrelOptionsSetup(IConfiguration configuration,ForwardOp
             db.AddOption(forwardOptions);
             
             kestrelConfigLoad.Endpoint(forwardOptions.ForwardName,
-                endpoint => endpoint.ListenOptions.UseConnectionHandler<TelnetConnectionHandler>());
+                endpoint => endpoint.ListenOptions.UseConnectionHandler<ForwardConnectionHandler>());
         }
     }
 }
