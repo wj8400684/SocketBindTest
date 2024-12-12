@@ -24,7 +24,7 @@ internal sealed class KestrelOptionsSetup(IConfiguration configuration)
 
             var forwardOptions = ForwardOptions.Load(section);
             if (string.IsNullOrEmpty(forwardOptions.ForwardAddress) ||
-                IPAddress.TryParse(forwardOptions.ForwardAddress, out var forwardAddress))
+                !IPAddress.TryParse(forwardOptions.ForwardAddress, out var forwardAddress))
                 continue;
 
             forwardOptions.ForwardIpAddress = forwardAddress;

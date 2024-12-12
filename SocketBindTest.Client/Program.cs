@@ -7,10 +7,10 @@ using SuperSocket.Connection;
 var remo = new IPEndPoint(IPAddress.Parse("192.168.124.51"), 8080);
 
 var client = new HttpClient();
-client.BaseAddress = new Uri("http://192.168.124.51:8080");
+client.BaseAddress = new Uri("http://192.168.1.149:27727");
 
 var tasks = Enumerable
-    .Range(0, 10000)
+    .Range(0, 1)
     .Select(_ => RunConnectionAsync())
     .ToArray();
 
