@@ -11,7 +11,7 @@ var client = new HttpClient();
 client.BaseAddress = new Uri("http://192.168.1.149:9090");
 
 var tasks = Enumerable
-    .Range(0, 10000)
+    .Range(0, 1000)
     .Select(_ => RunConnectionAsync())
     .ToArray();
 
@@ -33,12 +33,17 @@ async Task<int> RunConnectionAsync()
     try
     {
         var state = await connector.ConnectAsync(remo);
-
+        if (!state.Result)
+        {
+            Console.WriteLine("Failed to connect to server.");
+            return -1;
+        }
+        
         var connection = state.CreateConnection(new ConnectionOptions());
         Console.WriteLine($"Connected to {remo}-{count}");
         count++;
       
-        await connection.SendAsync("Hello\r\n"u8.ToArray());
+        //await connection.SendAsync("Hello\r\n"u8.ToArray());
         
         await foreach (var pack in connection.RunAsync(new LinePipelineFilter()))
         {
