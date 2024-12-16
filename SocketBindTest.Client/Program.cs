@@ -8,7 +8,7 @@ int count = 0;
 var remo = new IPEndPoint(IPAddress.Parse("192.168.1.149"), 9090);
 
 var client = new HttpClient();
-client.BaseAddress = new Uri("http://192.168.124.57:9090");
+client.BaseAddress = new Uri("http://192.168.1.149:9090");
 
 var tasks = Enumerable
     .Range(0, 1)

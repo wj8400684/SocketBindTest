@@ -60,8 +60,8 @@ internal sealed class ForwardConnectionHandler : ConnectionHandler
 
         try
         {
-            socket.ExclusiveAddressUse = false;
-            socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+            //socket.ExclusiveAddressUse = false;
+            //socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
             socket.Bind(new IPEndPoint(address, port));
         }
         catch (SocketException ex) when (ex.SocketErrorCode == SocketError.AddressAlreadyInUse)
