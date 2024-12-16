@@ -7,6 +7,6 @@
         please contribute back.
     -->
     <Application>
-        <Assembly Name="KestrelFramework.dll" Dynamic="Required All"/>
+        <Assembly Name="KestrelFramework" Dynamic="Required All"/>
     </Application>
 </Directives>
