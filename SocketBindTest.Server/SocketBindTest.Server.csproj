@@ -13,4 +13,8 @@
       <PackageReference Include="SuperSocket.Kestrel" Version="2.0.0-beta.28" />
     </ItemGroup>
 
+    <ItemGroup>
+        <RdXmlFile Include="rd.xml"/>
+    </ItemGroup>
+    
 </Project>
