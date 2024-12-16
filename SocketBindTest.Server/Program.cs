@@ -14,8 +14,6 @@ builder.Services.AddSingleton<IConnectionContainer>(s => s.GetRequiredService<In
 
 var app = builder.Build();
 
-var connection = app.MapGroup("api/connection");
-
-connection.MapGet("count", (IConnectionContainer container) => Results.Ok($"在线客户端数量：{container.GetConnectionCount()}"));
+app.MapConnectionApi();
 
 app.Run();
