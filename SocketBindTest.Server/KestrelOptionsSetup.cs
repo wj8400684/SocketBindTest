@@ -38,10 +38,20 @@ internal sealed class KestrelOptionsSetup(
                 ArgumentNullException.ThrowIfNull(forwardOptions.ForwardAddress);
 
                 if (IPAddress.TryParse(forwardOptions.ForwardAddress, out var forwardAddress))
+                {
                     forwardOptions.ForwardEndPoint = new IPEndPoint(forwardAddress, forwardOptions.ForwardPort);
+
+                    logger.LogInformation(
+                        $"开始监听{forwardOptions.ListenUrl}=>{forwardOptions.ForwardEndPoint}-ForwardConnectionHandler");
+                }
                 else
+                {
                     forwardOptions.ForwardEndPoint = new DnsEndPoint(forwardOptions.ForwardAddress,
                         forwardOptions.ForwardPort, AddressFamily.InterNetwork);
+                    
+                    logger.LogInformation(
+                        $"开始监听{forwardOptions.ListenUrl}=>{forwardOptions.ForwardEndPoint}-ForwardConnectionHandler");
+                }
 
                 db.AddOption(forwardOptions);
 
@@ -53,8 +63,10 @@ internal sealed class KestrelOptionsSetup(
                         endpoint.ListenOptions.UseTlsDetection();
                         endpoint.ListenOptions.UseConnectionHandler<ForwardConnectionHandler>();
                     });
-                logger.LogInformation(
-                    $"开始监听{forwardOptions.ListenUrl}=>{forwardOptions.ForwardPort}-ForwardConnectionHandler");
+                
+                
+                
+                
             }
             else
             {
