@@ -4,7 +4,7 @@ using SuperSocket.Connection;
 using SuperSocket.Kestrel;
 using SuperSocket.ProtoBase;
 
-namespace SocketBindTest.Server;
+namespace SocketBindTest.Server.ConnectionHandlers;
 
 internal sealed class TelnetConnectionHandler(ILogger<TelnetConnectionHandler> logger) : ConnectionHandler
 {

@@ -14,12 +14,12 @@ internal sealed class ForwardOptions
     public string? ListenUrl { get; set; }
 
     public int ForwardPort { get; set; }
-
+    
     public string? ForwardAddress { get; set; }
 
     public bool IsForward { get; set; }
     
     public string? ForwardName { get; set; }
 
-    public IPAddress? ForwardIpAddress { get; set; }
+    public EndPoint? ForwardEndPoint { get; set; }
 }

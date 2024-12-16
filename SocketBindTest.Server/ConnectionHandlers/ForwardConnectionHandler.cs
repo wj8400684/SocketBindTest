@@ -1,28 +1,22 @@
 using System.Collections.Concurrent;
 using System.IO.Pipelines;
 using System.Net;
-using System.Net.Security;
 using System.Net.Sockets;
-using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Connections;
 
-namespace SocketBindTest.Server;
+namespace SocketBindTest.Server.ConnectionHandlers;
 
 internal sealed class ForwardConnectionHandler : ConnectionHandler
 {
     private readonly List<IPAddress> _ipAddresses;
+    private readonly ForwardOptions _forwardOptions;
     private readonly ILogger<ForwardConnectionHandler> _logger;
     private readonly ConcurrentDictionary<string, ConnectionContext> _connections = new();
-    private readonly IPEndPoint _remoteEndPoint;
 
     public ForwardConnectionHandler(ForwardOptionsDb db, ILogger<ForwardConnectionHandler> logger)
     {
         _logger = logger;
-        var forwardOptions = db.Finds().First();
-        
-        ArgumentNullException.ThrowIfNull(forwardOptions.ForwardIpAddress);
-
-        _remoteEndPoint = new IPEndPoint(forwardOptions.ForwardIpAddress, forwardOptions.ForwardPort);
+        _forwardOptions = db.Finds().First();
         
         _ipAddresses = Dns.GetHostAddresses(Dns.GetHostName())
             .Where(address => address.AddressFamily == AddressFamily.InterNetwork).ToList();
@@ -40,6 +34,10 @@ internal sealed class ForwardConnectionHandler : ConnectionHandler
 
     public override async Task OnConnectedAsync(ConnectionContext connection)
     {
+        var forwardEndPoint = _forwardOptions.ForwardEndPoint;
+        
+        ArgumentNullException.ThrowIfNull(forwardEndPoint);
+        
         var port = connection.RemoteEndPoint switch
         {
             IPEndPoint ip => ip.Port,
@@ -58,7 +56,7 @@ internal sealed class ForwardConnectionHandler : ConnectionHandler
         _logger.LogInformation("新连接，远程地址-{RemoteEndPoint}-{LocalEndPoint}", connection.RemoteEndPoint,
             connection.LocalEndPoint);
 
-        using var socket = new Socket(_remoteEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+        using var socket = new Socket(forwardEndPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
         try
         {
@@ -85,11 +83,11 @@ internal sealed class ForwardConnectionHandler : ConnectionHandler
 
         try
         {
-            await socket.ConnectAsync(_remoteEndPoint, cancellationTokenSource.Token);
+            await socket.ConnectAsync(forwardEndPoint, cancellationTokenSource.Token);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "连接远程服务器失败，远程地址-{RemoteEndPoint}", _remoteEndPoint);
+            _logger.LogError(ex, "连接远程服务器失败，远程地址-{forwardEndPoint}", forwardEndPoint);
             return;
         }
 
