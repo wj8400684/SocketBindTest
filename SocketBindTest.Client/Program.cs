@@ -5,10 +5,10 @@ using SuperSocket.Connection;
 using SuperSocket.ProtoBase;
 
 int count = 0;
-var remo = new IPEndPoint(IPAddress.Parse("192.168.1.149"), 9090);
+var remo = new IPEndPoint(IPAddress.Parse("192.168.1.149"), 8889);
 
 var client = new HttpClient();
-client.BaseAddress = new Uri("http://192.168.1.149:9090");
+//client.BaseAddress = new Uri("http://192.168.1.149:9090");
 
 var tasks = Enumerable
     .Range(0, 1)
@@ -23,37 +23,37 @@ Console.ReadKey();
 
 async Task<int> RunConnectionAsync()
 {
-    var response = await client.GetAsync("/");
-    var content = await response.Content.ReadAsStringAsync();
-    Console.WriteLine(content);
+    //var response = await client.GetAsync("http://192.168.1.149:9090/");
+    //var content = await response.Content.ReadAsStringAsync();
+    //Console.WriteLine(content);
 
-    //IConnector connector = new SocketConnector();
-    
-    // try
-    // {
-    //     var state = await connector.ConnectAsync(remo);
-    //     if (!state.Result)
-    //     {
-    //         Console.WriteLine("Failed to connect to server.");
-    //         return -1;
-    //     }
-    //     
-    //     var connection = state.CreateConnection(new ConnectionOptions());
-    //     Console.WriteLine($"Connected to {remo}-{count}");
-    //     count++;
-    //   
-    //     //await connection.SendAsync("Hello\r\n"u8.ToArray());
-    //     
-    //     await foreach (var pack in connection.RunAsync(new LinePipelineFilter()))
-    //     {
-    //         Console.WriteLine(pack.Text);
-    //     }
-    // }
-    // catch (Exception e)
-    // {
-    //     Console.WriteLine(e);
-    //     return -1;
-    // }
+    IConnector connector = new SocketConnector();
+
+    try
+    {
+        var state = await connector.ConnectAsync(remo);
+        if (!state.Result)
+        {
+            Console.WriteLine("Failed to connect to server.");
+            return -1;
+        }
+
+        var connection = state.CreateConnection(new ConnectionOptions());
+        Console.WriteLine($"Connected to {remo}-{count}");
+        count++;
+
+        //await connection.SendAsync("Hello\r\n"u8.ToArray());
+
+        await foreach (var pack in connection.RunAsync(new LinePipelineFilter()))
+        {
+            Console.WriteLine(pack.Text);
+        }
+    }
+    catch (Exception e)
+    {
+        Console.WriteLine(e);
+        return -1;
+    }
 
 
     return 0;

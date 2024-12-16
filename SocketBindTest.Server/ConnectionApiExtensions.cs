@@ -1,3 +1,5 @@
+using SocketBindTest.Server.Dto;
+
 namespace SocketBindTest.Server;
 
 public static class ConnectionApiExtensions
@@ -11,6 +13,10 @@ public static class ConnectionApiExtensions
 
     private static void MatGetConnectionCount(this RouteGroupBuilder group)
     {
-        group.MapGet("count", (IConnectionContainer container) => Results.Ok($"在线客户端数量：{container.GetConnectionCount()}"));
+        group.MapGet("count", (IConnectionContainer container) => new ConnectionDto
+        {
+            Msg = "操作成功",
+            Count = container.GetConnectionCount(),
+        });
     }
 }
