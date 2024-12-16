@@ -19,7 +19,11 @@ internal sealed class ForwardConnectionHandler : ConnectionHandler
     {
         _logger = logger;
         var forwardOptions = db.Finds().First();
-        _remoteEndPoint = new IPEndPoint(forwardOptions.ForwardIpAddress!, forwardOptions.ForwardPort);
+        
+        ArgumentNullException.ThrowIfNull(forwardOptions.ForwardIpAddress);
+
+        _remoteEndPoint = new IPEndPoint(forwardOptions.ForwardIpAddress, forwardOptions.ForwardPort);
+        
         _ipAddresses = Dns.GetHostAddresses(Dns.GetHostName())
             .Where(address => address.AddressFamily == AddressFamily.InterNetwork).ToList();
 
@@ -89,7 +93,7 @@ internal sealed class ForwardConnectionHandler : ConnectionHandler
             return;
         }
 
-        Stream stream = new NetworkStream(socket, false);
+        var stream = new NetworkStream(socket, true);
 
         _logger.LogInformation("开始传输数据-{RemoteEndPoint}-{LocalEndPoint}-{Count}", connection.RemoteEndPoint,
             connection.LocalEndPoint, _connections.Count);
@@ -119,40 +123,5 @@ internal sealed class ForwardConnectionHandler : ConnectionHandler
         _connections.TryRemove(connection.ConnectionId, out _);
         _logger.LogWarning("断开连接啦，远程地址-{RemoteEndPoint}-{LocalEndPoint}-连接数-{Count}", connection.RemoteEndPoint,
             connection.LocalEndPoint, _connections.Count);
-    }
-
-    private bool OnRemoteCertificateValidationCallback(object sender, X509Certificate? certificate, X509Chain? chain,
-        SslPolicyErrors sslPolicyErrors)
-    {
-        return true;
-    }
-
-    private X509Certificate OnLocalCertificateSelectionCallback(object sender, string targetHost,
-        X509CertificateCollection localCertificates, X509Certificate? remoteCertificate, string[] acceptableIssuers)
-    {
-        // if (_remoteEndPoint.Port == 443) 
-        // { 
-        //     var ssl = new SslStream(stream, false);
-
-        //     try
-        //     {
-        //         await ssl.AuthenticateAsClientAsync(new SslClientAuthenticationOptions
-        //         {
-        //             TargetHost = _remoteEndPoint.Host,
-        //             RemoteCertificateValidationCallback = OnRemoteCertificateValidationCallback,
-        //             LocalCertificateSelectionCallback = OnLocalCertificateSelectionCallback,
-        //         }, cancellationTokenSource.Token);
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         _logger.LogError(ex,"ssl验证失败-{RemoteEndPoint}-{LocalEndPoint}", connection.RemoteEndPoint,
-        //connection.LocalEndPoint);
-        //         return;
-        //     }
-
-        //     stream = ssl;
-        // }
-
-        return null;
     }
 }

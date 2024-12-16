@@ -7,6 +7,6 @@ internal sealed class SocketTransportOptionsSetup : IConfigureOptions<SocketTran
 {
     public void Configure(SocketTransportOptions options)
     {
-        options.Backlog = 65535;
+        options.Backlog = 512;
     }
 }
