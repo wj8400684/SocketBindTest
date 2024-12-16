@@ -5,14 +5,23 @@ using SuperSocket.Connection;
 using SuperSocket.ProtoBase;
 
 int count = 0;
-var remo = new IPEndPoint(IPAddress.Parse("192.168.1.149"), 8889);
+var remo = new IPEndPoint(IPAddress.Parse("192.168.1.173"), 8889);
 
 var client = new HttpClient();
 //client.BaseAddress = new Uri("http://192.168.1.149:9090");
 
+for (int i = 0; i < 2000; i++)
+{
+    await RunConnectionAsync();
+}
+
+Console.WriteLine($"Rounds");
+
+Console.ReadKey();
+
 var tasks = Enumerable
-    .Range(0, 5000)
-    .Select(_ => RunConnectionAsync())
+    .Range(0, 2000)
+    .Select(async _ => await RunConnectionAsync())
     .ToArray();
 
 var rounds = await Task.WhenAll(tasks);
@@ -43,11 +52,7 @@ async Task<int> RunConnectionAsync()
         count++;
 
         //await connection.SendAsync("Hello\r\n"u8.ToArray());
-
-        await foreach (var pack in connection.RunAsync(new LinePipelineFilter()))
-        {
-            Console.WriteLine(pack.Text);
-        }
+        StartReceive(connection);
     }
     catch (Exception e)
     {
@@ -57,4 +62,12 @@ async Task<int> RunConnectionAsync()
 
 
     return 0;
+}
+
+async void StartReceive(IConnection connection)
+{
+    await foreach (var pack in connection.RunAsync(new LinePipelineFilter()))
+    {
+        Console.WriteLine(pack.Text);
+    }
 }
