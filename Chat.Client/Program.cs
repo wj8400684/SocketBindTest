@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
 
 var count = 0;
-var remoteEndPoint = new IPEndPoint(IPAddress.Parse("192.168.1.173"), 8080);
+var remoteEndPoint = new IPEndPoint(IPAddress.Parse("192.168.1.149"), 8080);
 
 for (var i = 0; i < 2000; i++)
 {
