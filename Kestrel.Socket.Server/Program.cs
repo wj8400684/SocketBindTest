@@ -1,12 +1,11 @@
-using Kestrel.Socket.Server.Dto;
 using Kestrel.Socket.Server.Extensions;
+using Kestrel.Socket.Server.Setups;
 
 var builder = WebApplication.CreateSlimBuilder(args);
 
-builder.Services.ConfigureHttpJsonOptions(options =>
-{
-    options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
-});
+builder.Services.ConfigureOptions<KestrelOptionsSetup>();
+builder.Services.ConfigureOptions<JsonOptionsSetup>();
+builder.Services.ConfigureOptions<SocketTransportOptionsSetup>();
 
 builder.Services.AddConnectionContainer();
 
