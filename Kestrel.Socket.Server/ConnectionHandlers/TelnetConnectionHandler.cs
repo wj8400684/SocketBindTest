@@ -11,6 +11,8 @@ internal sealed class TelnetConnectionHandler(ILogger<TelnetConnectionHandler> l
 {
     public override async Task OnConnectedAsync(ConnectionContext connection)
     {
+        var reader = connection.Transport.Input;
+
         var pipeConnection = new KestrelPipeConnection(connection, new ConnectionOptions
         {
             Logger = logger,
@@ -29,3 +31,6 @@ internal sealed class TelnetConnectionHandler(ILogger<TelnetConnectionHandler> l
         }
     }
 }
+
+
+    
