@@ -2,9 +2,12 @@ using SuperSocket.ProtoBase;
 using SuperSocket.Server;
 using SuperSocket.Server.Abstractions.Session;
 using SuperSocket.Server.Host;
-using SuperSocket.WebApp;
+using SuperSocket.WebApp.Dto;
+using SuperSocket.WebApp.Setups;
 
-var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateSlimBuilder(args);
+
+builder.Services.ConfigureOptions<JsonOptionsSetup>();
 
 builder.Host.AsSuperSocketHostBuilder<TextPackageInfo, LinePipelineFilter>()
     .UseInProcSessionContainer()
