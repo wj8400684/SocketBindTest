@@ -14,10 +14,9 @@ internal static class ConnectionApiExtensions
 
     private static void MatGetConnectionCount(this RouteGroupBuilder group)
     {
-        group.MapGet("count", (IConnectionContainer container) => new ConnectionDto
-        {
-            Msg = "操作成功",
-            Count = container.GetConnectionCount(),
-        });
+        group.MapGet("count", (IConnectionContainer container) => new ConnectionResponse(
+            Msg: "操作成功",
+            RefreshTime: DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+            Count: container.GetConnectionCount()));
     }
 }
