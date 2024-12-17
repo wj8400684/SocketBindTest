@@ -5,7 +5,7 @@ using SuperSocket.Connection;
 using SuperSocket.ProtoBase;
 
 int count = 0;
-var remo = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 9000);
+var remo = new IPEndPoint(IPAddress.Parse("192.168.1.173"), 9000);
 
 var client = new HttpClient();
 //client.BaseAddress = new Uri("http://192.168.1.149:9090");
@@ -51,7 +51,7 @@ async Task<int> RunConnectionAsync()
         Console.WriteLine($"Connected to {remo}-{count}");
         count++;
 
-        await connection.SendAsync("Hello\r\n"u8.ToArray());
+        //await connection.SendAsync("Hello\r\n"u8.ToArray());
         StartReceive(connection);
     }
     catch (Exception e)
