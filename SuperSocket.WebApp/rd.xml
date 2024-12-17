@@ -7,7 +7,6 @@
         please contribute back.
     -->
     <Application>
-        <Assembly Name="SuperSocketAot" Dynamic="Required All"/>
         <Assembly Name="SuperSocket.Connection" Dynamic="Required All"/>
         <Assembly Name="SuperSocket.Primitives" Dynamic="Required All"/>
         <Assembly Name="SuperSocket.ProtoBase" Dynamic="Required All"/>
