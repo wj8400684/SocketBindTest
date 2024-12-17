@@ -6,3 +6,5 @@ riderModule.iml
 /.idea/.idea.SocketBindTest/.idea
 /.vs/ProjectEvaluation
 /.vs/SocketBindTest
+/Kestrel.Socket.Server/Properties/PublishProfiles
+/Kestrel.Socket.Server
