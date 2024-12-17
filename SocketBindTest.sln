@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApplication1", "WebAppli
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuperSocket.ServerBind", "SuperSocket.ServerBind\SuperSocket.ServerBind.csproj", "{97ACC4D1-E82B-458E-A73F-0BF3C69CAE5F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kestrel.Socket.Server", "Kestrel.Socket.Server\Kestrel.Socket.Server.csproj", "{CACA32CD-5C38-4372-9291-6FC5465A6A5D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{97ACC4D1-E82B-458E-A73F-0BF3C69CAE5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{97ACC4D1-E82B-458E-A73F-0BF3C69CAE5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{97ACC4D1-E82B-458E-A73F-0BF3C69CAE5F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CACA32CD-5C38-4372-9291-6FC5465A6A5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CACA32CD-5C38-4372-9291-6FC5465A6A5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CACA32CD-5C38-4372-9291-6FC5465A6A5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CACA32CD-5C38-4372-9291-6FC5465A6A5D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
