@@ -6,7 +6,7 @@ using SuperSocket.WebApp;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.AsSuperSocketHostBuilder<StringPackageInfo, CommandLinePipelineFilter>()
+builder.Host.AsSuperSocketHostBuilder<TextPackageInfo, LinePipelineFilter>()
     .UseInProcSessionContainer()
     .AsMinimalApiHostBuilder()
     .ConfigureHostBuilder();
