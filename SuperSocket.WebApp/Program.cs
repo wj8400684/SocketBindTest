@@ -1,5 +1,6 @@
 using SuperSocket.ProtoBase;
 using SuperSocket.Server;
+using SuperSocket.Server.Abstractions;
 using SuperSocket.Server.Abstractions.Session;
 using SuperSocket.Server.Host;
 using SuperSocket.WebApp.Dto;
@@ -10,6 +11,15 @@ var builder = WebApplication.CreateSlimBuilder(args);
 builder.Services.ConfigureOptions<JsonOptionsSetup>();
 
 builder.Host.AsSuperSocketHostBuilder<TextPackageInfo, LinePipelineFilter>()
+    .ConfigureSuperSocket(server =>
+    {
+        server.AddListener(new ListenOptions
+        {
+            BackLog = 512,
+            Ip = "Any",
+            Port = 9000
+        });
+    })
     .UseInProcSessionContainer()
     .AsMinimalApiHostBuilder()
     .ConfigureHostBuilder();
