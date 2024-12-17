@@ -1,4 +1,3 @@
-using Kestrel.Socket.Server;
 using Kestrel.Socket.Server.Extensions;
 using Kestrel.Socket.Server.Setups;
 
