@@ -9,7 +9,7 @@ internal sealed class KestrelOptionsSetup(IConfiguration configuration)
 {
     public void Configure(KestrelServerOptions options)
     {
-        TheadPoolEx.ResetThreadPool(100000, 100000, 555, 555);
+        //TheadPoolEx.ResetThreadPool(100000, 100000, 555, 555);
         var section = configuration.GetSection("Kestrel");
         options.Configure(section)
             .Endpoint("Telnet", endpoint => endpoint.ListenOptions
