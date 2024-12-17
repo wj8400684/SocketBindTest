@@ -5,12 +5,14 @@ using SuperSocket.Connection;
 using SuperSocket.ProtoBase;
 
 int count = 0;
-var remo = new IPEndPoint(IPAddress.Parse("192.168.1.149"), 9000);
+var remo = new IPEndPoint(IPAddress.Parse("192.168.124.51"), 9090);
+
+var list = new List<IConnection>();
 
 var client = new HttpClient();
 //client.BaseAddress = new Uri("http://192.168.1.149:9090");
 
-for (int i = 0; i < 2000; i++)
+for (int i = 0; i < 1; i++)
 {
     await RunConnectionAsync();
 }
@@ -32,7 +34,7 @@ Console.ReadKey();
 
 async Task<int> RunConnectionAsync()
 {
-    //var response = await client.GetAsync("http://192.168.1.149:9090/");
+    //var response = await client.GetAsync("http://192.168.124.51:9090/");
     //var content = await response.Content.ReadAsStringAsync();
     //Console.WriteLine(content);
 
@@ -51,6 +53,7 @@ async Task<int> RunConnectionAsync()
         Console.WriteLine($"Connected to {remo}-{count}");
         count++;
 
+        list.Add(connection);
         //await connection.SendAsync("Hello\r\n"u8.ToArray());
         StartReceive(connection);
     }

@@ -1,8 +1,6 @@
 using Kestrel.Socket.Server.Chat;
-using Kestrel.Socket.Server.ConnectionHandlers;
 using Kestrel.Socket.Server.Extensions;
 using Kestrel.Socket.Server.Setups;
-using Microsoft.AspNetCore.Connections;
 
 var builder = WebApplication.CreateSlimBuilder(args);
 
@@ -10,7 +8,6 @@ builder.Services.AddSignalR()
     .AddJsonProtocol()
     .AddContainer();
 
-builder.Services.AddSingleton<TelnetConnectionHandler>();
 builder.Services.ConfigureOptions<KestrelOptionsSetup>();
 builder.Services.ConfigureOptions<JsonOptionsSetup>();
 builder.Services.ConfigureOptions<SocketTransportOptionsSetup>();
