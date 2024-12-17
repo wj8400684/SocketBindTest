@@ -14,7 +14,7 @@ internal sealed class ForwardConnectionHandler(
     : ConnectionHandler
 {
     private readonly ConcurrentDictionary<string, ConnectionContext> _connections = new();
-    private readonly DnsEndPoint _target = new("www.baidu.com", 80, AddressFamily.InterNetwork);
+    private readonly DnsEndPoint _target = new("192.168.124.51", 27727, AddressFamily.InterNetwork);
     
     public override async Task OnConnectedAsync(ConnectionContext connection)
     {
