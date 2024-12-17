@@ -11,26 +11,23 @@ internal sealed class TelnetConnectionHandler(ILogger<TelnetConnectionHandler> l
 {
     public override async Task OnConnectedAsync(ConnectionContext connection)
     {
-        var reader = connection.Transport.Input;
-
-        var pipeConnection = new KestrelPipeConnection(connection, new ConnectionOptions
-        {
-            Logger = logger,
-        });
-
-        try
-        {
-            await foreach (var pack in pipeConnection.RunAsync(new LinePipelineFilter()))
-            {
-                Console.WriteLine(pack.Text);
-            }
-        }
-        catch (Exception e)
-        {
-            logger.LogError(e, $"发生异常-{connection.ConnectionId}{connection.RemoteEndPoint}");
-        }
+        await connection.Transport.Input.ReadAsync();
     }
 }
-
-
-    
+//
+// var pipeConnection = new KestrelPipeConnection(connection, new ConnectionOptions
+// {
+//     Logger = logger,
+// });
+//
+// try
+// {
+//     await foreach (var pack in pipeConnection.RunAsync(new LinePipelineFilter()))
+//     {
+//         Console.WriteLine(pack.Text);
+//     }
+// }
+// catch (Exception e)
+// {
+//     logger.LogError(e, $"发生异常-{connection.ConnectionId}{connection.RemoteEndPoint}");
+// }
