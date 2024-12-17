@@ -19,10 +19,6 @@ internal sealed class InProcConnectionContainerMiddleware(ILogger<InProcConnecti
         {
             await next(context);
         }
-        catch (OperationCanceledException)
-        {
-            logger.LogWarning($"[{context.RemoteEndPoint}]-[{context.ConnectionId}]：任务已经取消");
-        }
         catch (Exception e)
         {
             logger.LogError(e, $"[{context.RemoteEndPoint}]-[{context.ConnectionId}]：执行中间件发生错误");
