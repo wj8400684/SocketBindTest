@@ -1,4 +1,3 @@
-using System.Collections.Concurrent;
 using Kestrel.Socket.Server.Middlewares;
 using Microsoft.AspNetCore.Connections;
 using SuperSocket.Connection;

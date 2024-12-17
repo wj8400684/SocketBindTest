@@ -1,6 +1,6 @@
 namespace Kestrel.Socket.Server.Dto;
 
-public sealed class ConnectionDto
+internal sealed class ConnectionDto
 {
     public int? Count { get; set; }
 

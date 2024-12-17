@@ -3,7 +3,7 @@ using KestrelFramework;
 
 namespace Kestrel.Socket.Server.Extensions;
 
-public static class ConnectionContainerExtensions
+internal static class ConnectionContainerExtensions
 {
     public static void AddConnectionContainer(this IServiceCollection services)
     {

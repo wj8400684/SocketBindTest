@@ -3,7 +3,7 @@ using Kestrel.Socket.Server.Middlewares;
 
 namespace Kestrel.Socket.Server.Extensions;
 
-public static class ConnectionApiExtensions
+internal static class ConnectionApiExtensions
 {
     public static void MapConnectionApi(this WebApplication app)
     {

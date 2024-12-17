@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 namespace Kestrel.Socket.Server.Extensions;
 
-public static partial class ListenOptionsExtensions
+internal static partial class ListenOptionsExtensions
 {
     /// <summary>
     /// 使用RedisConnectionHandler
