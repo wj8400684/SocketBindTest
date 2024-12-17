@@ -13,6 +13,13 @@
       <PackageReference Include="SuperSocket.Kestrel" Version="2.0.0-beta.28" />
     </ItemGroup>
 
+    <PropertyGroup>
+        <IsOSX Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'true'">true</IsOSX>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(IsOSX)'=='true'">
+        <DefineConstants>OSX</DefineConstants>
+    </PropertyGroup>
     <ItemGroup>
         <RdXmlFile Include="rd.xml"/>
     </ItemGroup>

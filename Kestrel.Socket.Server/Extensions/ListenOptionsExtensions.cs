@@ -22,6 +22,19 @@ internal static partial class ListenOptionsExtensions
     /// 
     /// </summary>
     /// <param name="listen"></param>
+    /// <returns></returns>
+    public static ListenOptions UseForward(this ListenOptions listen)
+    {
+        listen.UseConnectionHandler<ForwardConnectionHandler>();
+        
+        return listen;
+    }
+
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="listen"></param>
     public static ListenOptions UseContainer(this ListenOptions listen)
     {
         listen.Use(listen.ApplicationServices.GetRequiredService<InProcConnectionContainerMiddleware>());

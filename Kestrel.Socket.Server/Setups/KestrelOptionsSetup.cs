@@ -9,13 +9,14 @@ internal sealed class KestrelOptionsSetup(IConfiguration configuration)
 {
     public void Configure(KestrelServerOptions options)
     {
-        //TheadPoolEx.ResetThreadPool(65535, 65535, 30000, 30000);
-        //ThreadPool.SetMinThreads(10000, 10000);
-        //ThreadPool.SetMaxThreads(10000,10000);
         var section = configuration.GetSection("Kestrel");
+        
         options.Configure(section)
             .Endpoint("Telnet", endpoint => endpoint.ListenOptions
                 .UseContainer()
-                .UseTelnet());
+                .UseTelnet())
+            .Endpoint("Forward", endpoint => endpoint.ListenOptions
+                .UseTlsDetection()
+                .UseForward());
     }
 }
