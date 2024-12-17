@@ -11,7 +11,7 @@ internal sealed class InProcConnectionContainerMiddleware(ILogger<InProcConnecti
 
     public async Task InvokeAsync(ConnectionDelegate next, ConnectionContext context)
     {
-        logger.LogInformation($"[{context.RemoteEndPoint}]-[{context.ConnectionId}]：客户端连接");
+        logger.LogInformation($"[{context.RemoteEndPoint}]-[{context.ConnectionId}]：新连接-{_connections.Count}");
 
         Add(context);
 

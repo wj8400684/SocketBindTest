@@ -51,7 +51,7 @@ async Task<int> RunConnectionAsync()
         Console.WriteLine($"Connected to {remo}-{count}");
         count++;
 
-        //await connection.SendAsync("Hello\r\n"u8.ToArray());
+        await connection.SendAsync("Hello\r\n"u8.ToArray());
         StartReceive(connection);
     }
     catch (Exception e)
