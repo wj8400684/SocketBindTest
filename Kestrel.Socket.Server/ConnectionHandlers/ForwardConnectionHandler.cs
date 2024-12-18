@@ -14,7 +14,7 @@ internal sealed class ForwardConnectionHandler(
     : ConnectionHandler
 {
     private readonly ConcurrentDictionary<string, ConnectionContext> _connections = new();
-    private readonly DnsEndPoint _target = new("192.168.1.149", 27727, AddressFamily.InterNetwork);
+    private readonly DnsEndPoint _target = new("159.75.132.21", 9000, AddressFamily.InterNetwork);
     
     public override async Task OnConnectedAsync(ConnectionContext connection)
     {
@@ -38,24 +38,24 @@ internal sealed class ForwardConnectionHandler(
 
         var address = localEndPoint.Address.MapToIPv4();
 
-        // try
-        // {
-        //     socket.ExclusiveAddressUse = false;
-        //     socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-        //     socket.Bind(new IPEndPoint(address, port));
-        // }
-        // catch (SocketException ex) when (ex.SocketErrorCode == SocketError.AddressAlreadyInUse)
-        // {
-        //     logger.LogError(ex, "绑定ip失败，远程地址-{RemoteEndPoint}-{LocalEndPoint}", connection.RemoteEndPoint,
-        //         connection.LocalEndPoint);
-        //     return;
-        // }
-        // catch (Exception e)
-        // {
-        //     logger.LogError(e, "设置socket参数失败未知错误-{RemoteEndPoint}-{LocalEndPoint}", connection.RemoteEndPoint,
-        //         connection.LocalEndPoint);
-        //     return;
-        // }
+        try
+        {
+            socket.ExclusiveAddressUse = false;
+            socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+            socket.Bind(new IPEndPoint(address, port));
+        }
+        catch (SocketException ex) when (ex.SocketErrorCode == SocketError.AddressAlreadyInUse)
+        {
+            logger.LogError(ex, "绑定ip失败，远程地址-{RemoteEndPoint}-{LocalEndPoint}", connection.RemoteEndPoint,
+                connection.LocalEndPoint);
+            return;
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "设置socket参数失败未知错误-{RemoteEndPoint}-{LocalEndPoint}", connection.RemoteEndPoint,
+                connection.LocalEndPoint);
+            return;
+        }
 
         using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(60));
         using var cancellationTokenSource =

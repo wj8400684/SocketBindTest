@@ -14,7 +14,7 @@ var list = new List<IConnection>();
 var client = new HttpClient();
 //client.BaseAddress = new Uri("http://192.168.1.149:9090");
 
-for (int i = 0; i < 10000; i++)
+for (int i = 0; i < 2000; i++)
 {
     await RunConnectionAsync();
 }
