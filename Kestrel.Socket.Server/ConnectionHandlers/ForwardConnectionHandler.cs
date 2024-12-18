@@ -21,7 +21,6 @@ internal sealed class ForwardConnectionHandler(
         logger.LogInformation("新连接，远程地址-{RemoteEndPoint}-{LocalEndPoint}", connection.RemoteEndPoint,
             connection.LocalEndPoint);
 
-
 #if !OSX
 
         var port = connection.RemoteEndPoint switch
