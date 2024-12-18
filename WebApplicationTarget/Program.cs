@@ -1,16 +1,20 @@
-using Microsoft.AspNetCore.Connections;
-using WebApplicationTarget;
+using WebApplicationTarget.Dto;
+using WebApplicationTarget.Extensions;
+using WebApplicationTarget.Middlewares;
+using WebApplicationTarget.Setups;
 
 var builder = WebApplication.CreateSlimBuilder(args);
 
-builder.WebHost.UseKestrel(options =>
-{
-    options.ListenAnyIP(27727, listenOptions =>
-    {
-        listenOptions.UseConnectionHandler<TelnetConnectionHandler>();
-    });
-});
+builder.Services.AddConnectionContainer();
+builder.Services.ConfigureOptions<KestrelOptionsSetup>();
+builder.Services.ConfigureOptions<JsonOptionsSetup>();
 
 var app = builder.Build();
+
+app.MapGet("/api/connection/count", (IConnectionContainer container) => new ConnectionResponse(
+    Msg: "操作成功",
+    RefreshTime: DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
+    Count: container.GetConnectionCount()));
+
 
 app.Run();
