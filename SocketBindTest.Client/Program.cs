@@ -5,14 +5,14 @@ using SuperSocket.Connection;
 using SuperSocket.ProtoBase;
 
 int count = 0;
-var remo = new IPEndPoint(IPAddress.Parse("192.168.124.51"), 9090);
+var remo = new IPEndPoint(IPAddress.Parse("192.168.1.149"), 9090);
 
 var list = new List<IConnection>();
 
 var client = new HttpClient();
 //client.BaseAddress = new Uri("http://192.168.1.149:9090");
 
-for (int i = 0; i < 1000; i++)
+for (int i = 0; i < 1; i++)
 {
     await RunConnectionAsync();
 }
