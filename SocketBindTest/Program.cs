@@ -13,7 +13,6 @@ var bindIp = new IPEndPoint(ipAddress.First(), Random.Shared.Next(10000, 65535))
 using var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
 socket.ExclusiveAddressUse = false;
-socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
 socket.Bind(bindIp);
 
 Console.WriteLine("正在连接");
