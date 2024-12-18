@@ -36,7 +36,7 @@ internal sealed class ForwardConnectionHandler(
 
         using var socket = new System.Net.Sockets.Socket(_target.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
-#if IsWindows
+#if IsWindows 
         try
         {
             socket.ExclusiveAddressUse = false;
