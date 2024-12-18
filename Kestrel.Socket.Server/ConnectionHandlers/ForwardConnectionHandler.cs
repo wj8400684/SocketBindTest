@@ -18,6 +18,12 @@ internal sealed class ForwardConnectionHandler(
     
     public override async Task OnConnectedAsync(ConnectionContext connection)
     {
+        logger.LogInformation("新连接，远程地址-{RemoteEndPoint}-{LocalEndPoint}", connection.RemoteEndPoint,
+            connection.LocalEndPoint);
+
+
+#if !OSX
+
         var port = connection.RemoteEndPoint switch
         {
             IPEndPoint ip => ip.Port,
@@ -31,12 +37,8 @@ internal sealed class ForwardConnectionHandler(
             return;
         }
 
-        logger.LogInformation("新连接，远程地址-{RemoteEndPoint}-{LocalEndPoint}", connection.RemoteEndPoint,
-            connection.LocalEndPoint);
-
         using var socket = new System.Net.Sockets.Socket(_target.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
-#if !OSX
         var address = localEndPoint.Address.MapToIPv4();
 
         try
@@ -58,6 +60,10 @@ internal sealed class ForwardConnectionHandler(
             return;
         }
 
+#else
+        
+        using var socket = new System.Net.Sockets.Socket(_target.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+        
 #endif
 
         using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(60));
