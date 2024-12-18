@@ -14,11 +14,11 @@
     </ItemGroup>
 
     <PropertyGroup>
-        <IsOSX Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'true'">true</IsOSX>
+        <IsWindows Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">true</IsWindows>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(IsOSX)'=='true'">
-        <DefineConstants>OSX</DefineConstants>
+    <PropertyGroup Condition="'$(IsWindows)'=='true'">
+        <DefineConstants>Windows</DefineConstants>
     </PropertyGroup>
     <ItemGroup>
         <RdXmlFile Include="rd.xml"/>
