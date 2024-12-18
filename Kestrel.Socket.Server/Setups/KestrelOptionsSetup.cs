@@ -16,8 +16,10 @@ internal sealed class KestrelOptionsSetup(IConfiguration configuration)
                 .UseContainer()
                 .UseTelnet())
             .Endpoint("Forward", endpoint => endpoint.ListenOptions
+                .UseContainer()
                 .UseForward())
             .Endpoint("ForwardSSL", endpoint => endpoint.ListenOptions
+                .UseContainer()
                 .UseTlsDetection()
                 .UseForward());
     }
