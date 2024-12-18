@@ -21,8 +21,6 @@ internal sealed class ForwardConnectionHandler(
         logger.LogInformation("新连接，远程地址-{RemoteEndPoint}-{LocalEndPoint}", connection.RemoteEndPoint,
             connection.LocalEndPoint);
 
-#if !OSX
-
         var port = connection.RemoteEndPoint switch
         {
             IPEndPoint ip => ip.Port,
@@ -58,12 +56,6 @@ internal sealed class ForwardConnectionHandler(
                 connection.LocalEndPoint);
             return;
         }
-
-#else
-        
-        using var socket = new System.Net.Sockets.Socket(_target.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-        
-#endif
 
         using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(60));
         using var cancellationTokenSource =
