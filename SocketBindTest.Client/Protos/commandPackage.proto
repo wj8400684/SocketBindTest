@@ -1,0 +1,156 @@
+syntax = "proto3";
+
+package SocketBindTest.Client;
+
+message CommandPackage{
+  enum CommandType {
+    Unknown = 0;
+    HeartBeat = 1;
+    Unknown3 = 3;
+    Unknown4 = 4;
+    HeartBeatAck = 101;
+    Unknown102 = 102;
+    Unknown103 = 103;
+    Unknown104 = 104;
+    EnterRoom = 200;
+    UserPause = 201;
+    UserExit = 202;
+    AuthorPushTrafficZero = 203;
+    HorseRacing = 204;
+    RaceLose = 205;
+    VoipSignal = 206;
+    EnterRoomAck = 300;
+    AuthorPause = 301;
+    AuthorResume = 302;
+    AuthorPushTrafficZero1 = 303;
+    AuthorHeartbeatMiss = 304;
+    PipStarted = 305;
+    PipEnded = 306;
+    HorseRacingAck = 307;
+    FeedPush = 310;
+    LiveChatCall = 320;
+    LiveChatCallAccepted = 321;
+    LiveChatCallRejected = 322;
+    LiveChatReady = 323;
+    LiveChatGuestEndCall = 324;
+    LiveChatEnded = 325;
+    RenderingMagicFaceDisable = 326;
+    RenderingMagicFaceEnable = 327;
+    CurrentRedPackFeed = 330;
+    CurrentArrowRedPackFeed = 331;
+    RiddleOpened = 390;
+    RiddleClosed = 391;
+    LiveWatchingList = 340;
+    SuspectedViolation = 355;
+    VoipSignal1 = 308;
+    WishListOpened = 410;
+    WishListClosed = 411;
+    FansTopOpened = 417;
+    FansTopClosed = 418;
+    LiveFansTopOpened = 521;
+    LiveFansTopClosed = 522;
+    LiveStreamAddToMusicStation = 460;
+    LiveStreamRemoveFromMusicStation = 461;
+  }
+
+  int32 Command = 1;
+
+  int32 result = 2;
+
+  bytes content = 3;
+
+  int64 timeStamp = 4;
+
+  string errorMessage = 5;
+}
+
+
+message EnterRoomPackage
+{
+  string token = 1;
+
+  string clientId = 2;
+
+  string deviceId = 3;
+
+  string liveStreamId = 4;
+
+  bool isAuthor = 5;
+
+  int32 reconnectCount = 6;
+
+  int32 lastErrorCode = 7;
+
+  string locale = 8;
+
+  string appVer = 9;
+
+  string location = 10;
+
+  string operator = 11;
+
+  string firstEnter = 12;
+
+  string expTag = 13;
+
+  string attach = 14;
+
+  int32 appType = 15;
+
+  int32 sourceType = 16;
+
+  string broadcastGiftToken = 17;
+
+  string serviceToken = 18;
+
+  string redPackId = 19;
+
+  string authorId = 20;
+
+  string kpn = 21;
+
+  string kpf = 22;
+
+  bool isCustodian = 23;
+
+  string sysVer = 24;
+
+  string sys = 25;
+
+  string phoneModel = 26;
+
+  string channel = 27;
+
+  bool isSimpleLive = 28;
+}
+
+message HorseRacingPackage{
+  string liveStreamId = 1;
+
+  string horseTag = 2;
+
+  int64 clientVisitorId = 3;
+
+  bool isAuthor = 4;
+
+  int32 clientId = 10;
+
+  string deviceId = 11;
+
+  string locale = 12;
+
+  string appVer = 13;
+
+  double latitude = 14;
+
+  double longitude = 15;
+
+  string operator = 16;
+
+  string sClientVisitorId = 17;
+}
+
+message GeneralPackage
+{
+  int64 timeStamp = 1;
+}

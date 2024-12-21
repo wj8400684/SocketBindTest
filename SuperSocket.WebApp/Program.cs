@@ -27,28 +27,23 @@ builder.Services.ConfigureOptions<JsonOptionsSetup>();
 //     .ConfigureHostBuilder();
 
 builder.Host.AsMultipleServerHostBuilder()
-    .AddServer<ChatServer, TextPackageInfo, LinePipelineFilter>(c =>
+    .ConfigureAppConfiguration((hostingContext, config) =>
     {
-        c.ConfigureSuperSocket(server =>
+        config.Sources.Clear();
+        config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+    })
+    .AddServer<ChatServer, TextPackageInfo, LinePipelineFilter>(builder1 =>
+    {
+        builder1.ConfigureServerOptions((ctx, config) =>
         {
-            server.AddListener(new ListenOptions
-            {
-                BackLog = 512,
-                Ip = "Any",
-                Port = 9000
-            });
+            return config.GetSection("TestServer1");
         });
     })
-    .AddServer<GameServer, TextPackageInfo, LinePipelineFilter>(c =>
+    .AddServer<GameServer, TextPackageInfo, LinePipelineFilter>(builder1 =>
     {
-        c.ConfigureSuperSocket(server =>
+        builder1.ConfigureServerOptions((ctx, config) =>
         {
-            server.AddListener(new ListenOptions
-            {
-                BackLog = 512,
-                Ip = "Any",
-                Port = 9001
-            });
+            return config.GetSection("TestServer2");
         });
     })
     .AsMinimalApiHostBuilder()
