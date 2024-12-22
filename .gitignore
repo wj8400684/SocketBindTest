@@ -8,3 +8,5 @@ riderModule.iml
 /.vs/SocketBindTest
 /Kestrel.Socket.Server/Properties/PublishProfiles
 /Kestrel.Socket.Server
+/WebApplicationTarget/.config/dotnet-tools.json
+/WebApplicationTarget/Properties/PublishProfiles
