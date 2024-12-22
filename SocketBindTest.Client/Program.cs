@@ -89,6 +89,28 @@ async Task<int> RunConnectionLiveAsync()
     //Console.WriteLine(content);
     //new SocketConnector();
 
+    int m = 0;
+    var s1 = "127.0.0.1,880,wujun,wujun43435".AsSpan();
+
+    var array = s1.Split(',');
+    while (array.MoveNext())
+    {
+        var start = array.Current.Start.Value;
+        var length = array.Current.End.Value - array.Current.Start.Value;
+
+        var s2 = s1.Slice(start, length).ToString();
+    }
+
+    var connectors = new List<ConnectorBase>
+    {
+        new Socks5Connector(new IPEndPoint(IPAddress.Parse("159.75.132.21"), 38438)),
+        new EnterRoomConnector()
+    };
+    
+    
+    
+
+
     IConnector connector = new Socks5Connector(new IPEndPoint(IPAddress.Parse("159.75.132.21"), 38438));
 
     try

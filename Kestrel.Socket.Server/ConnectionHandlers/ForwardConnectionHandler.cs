@@ -36,16 +36,9 @@ internal sealed class ForwardConnectionHandler(
 
         using var socket = new System.Net.Sockets.Socket(_target.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
-#if IsWindows 
-        try
-        {
-            socket.ExclusiveAddressUse = false;
-            socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.IpTimeToLive, true);
-        }
-        catch (Exception ex)
-        {
-            throw new Exception($"设置socket相关参数发生异常-{state.BindEndPoint}", ex);
-        }
+#if Windows 
+        socket.ExclusiveAddressUse = false;
+        socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, 1); 
 #endif
         
         var address = localEndPoint.Address.MapToIPv4();

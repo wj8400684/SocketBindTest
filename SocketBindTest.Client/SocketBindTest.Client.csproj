@@ -14,7 +14,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="SuperSocket.Client.Proxy" Version="2.0.0-beta.28.539" />
+        <PackageReference Include="SuperSocket.Client.Proxy" Version="2.0.0-beta.28.2" />
     </ItemGroup>
 
     <ItemGroup>

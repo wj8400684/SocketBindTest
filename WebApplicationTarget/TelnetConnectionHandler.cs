@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Connections;
+using Microsoft.AspNetCore.Connections.Features;
 using SuperSocket.Connection;
 using SuperSocket.Kestrel;
 using SuperSocket.ProtoBase;
@@ -9,9 +10,13 @@ internal sealed class TelnetConnectionHandler(
     ILogger<TelnetConnectionHandler> logger)
     : ConnectionHandler
 {
-    public override async Task OnConnectedAsync(ConnectionContext connection)
+    public override async Task OnConnectedAsync(ConnectionContext context)
     {
-        var pipeConnection = new KestrelPipeConnection(connection, new ConnectionOptions
+        var transferFormat = context.Features.Get<ITransferFormatFeature>();
+        if (transferFormat != null)
+            transferFormat.ActiveFormat = TransferFormat.Binary;
+        
+        var pipeConnection = new KestrelPipeConnection(context, new ConnectionOptions
         {
             Logger = logger,
         });
@@ -25,7 +30,7 @@ internal sealed class TelnetConnectionHandler(
         }
         catch (Exception e)
         {
-            logger.LogError(e, $"发生异常-{connection.ConnectionId}{connection.RemoteEndPoint}");
+            logger.LogError(e, $"发生异常-{context.ConnectionId}{context.RemoteEndPoint}");
         }
     }
 }
