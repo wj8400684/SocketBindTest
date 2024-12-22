@@ -17,7 +17,7 @@ internal sealed class WebSocketConnectionHandler(
 
         container.Add(context);
 
-        logger.LogInformation($"[{context.RemoteEndPoint}]-[{context.ConnectionId}]：新连接-{container.GetConnectionCount()}");
+        logger.LogDebug($"[{context.RemoteEndPoint}]-[{context.ConnectionId}]：新连接-{container.GetConnectionCount()}");
 
         await using var connection = new WebSocketConnection(context);
 
@@ -25,7 +25,7 @@ internal sealed class WebSocketConnectionHandler(
         {
             await foreach (var pack in connection.RunAsync())
             {
-                logger.LogInformation($"Received message: {pack}");
+                logger.LogDebug($"Received message: {pack}");
                 await connection.SendAsync("ddffdgfgf\r\n"u8.ToArray(), CancellationToken.None);
             }
         }
@@ -36,7 +36,7 @@ internal sealed class WebSocketConnectionHandler(
         finally
         {
             container.Remove(context);
-            logger.LogInformation($"[{context.RemoteEndPoint}]-[{context.ConnectionId}]：客户端断开连接");
+            logger.LogDebug($"[{context.RemoteEndPoint}]-[{context.ConnectionId}]：客户端断开连接");
         }
     }
 }
