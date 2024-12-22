@@ -1,13 +1,10 @@
 using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Connections.Features;
-using SuperSocket.Connection;
-using SuperSocket.Kestrel.Connection;
-using SuperSocket.ProtoBase;
 using WebApplicationTarget.Middlewares;
 
 namespace WebApplicationTarget;
 
-internal sealed class TelnetConnectionHandler(
+internal sealed class WebSocketConnectionHandler(
     IConnectionContainer container,
     ILogger<TelnetConnectionHandler> logger)
     : ConnectionHandler
@@ -16,22 +13,20 @@ internal sealed class TelnetConnectionHandler(
     {
         var transferFormat = context.Features.Get<ITransferFormatFeature>();
         if (transferFormat != null)
-        {
-            container.Add(context);
             transferFormat.ActiveFormat = TransferFormat.Binary;
-        }
 
-        var pipeConnection = new KestrelPipeConnection(context, new ConnectionOptions
-        {
-            Logger = logger,
-        });
+        container.Add(context);
+
+        logger.LogInformation($"[{context.RemoteEndPoint}]-[{context.ConnectionId}]：新连接-{container.GetConnectionCount()}");
+
+        await using var connection = new WebSocketConnection(context);
 
         try
         {
-            await foreach (var pack in pipeConnection.RunAsync(new LinePipelineFilter()))
+            await foreach (var pack in connection.RunAsync())
             {
                 logger.LogInformation($"Received message: {pack}");
-                await pipeConnection.SendAsync("ddffdgfgf\r\n"u8.ToArray(), CancellationToken.None);
+                await connection.SendAsync("ddffdgfgf\r\n"u8.ToArray(), CancellationToken.None);
             }
         }
         catch (Exception e)
@@ -40,10 +35,8 @@ internal sealed class TelnetConnectionHandler(
         }
         finally
         {
-            if (transferFormat != null)
-                container.Remove(context);
-
-            await context.DisposeAsync();
+            container.Remove(context);
+            logger.LogInformation($"[{context.RemoteEndPoint}]-[{context.ConnectionId}]：客户端断开连接");
         }
     }
 }

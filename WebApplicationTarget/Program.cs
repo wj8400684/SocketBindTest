@@ -8,6 +8,8 @@ var builder = WebApplication.CreateSlimBuilder(args);
 
 builder.Services.AddConnections();
 builder.Services.AddConnectionContainer();
+builder.Services.AddSingleton<TelnetConnectionHandler>();
+builder.Services.AddSingleton<WebSocketConnectionHandler>();
 builder.Services.ConfigureOptions<KestrelOptionsSetup>();
 builder.Services.ConfigureOptions<JsonOptionsSetup>();
 
@@ -19,5 +21,6 @@ app.MapGet("/api/connection/count", (IConnectionContainer container) => new Conn
     Count: container.GetConnectionCount()));
 
 app.MapConnectionHandler<TelnetConnectionHandler>("/api/telnet");
+app.MapConnectionHandler<WebSocketConnectionHandler>("/api/websocket");
 
 app.Run();
