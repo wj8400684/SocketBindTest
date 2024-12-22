@@ -9,7 +9,7 @@ namespace WebApplicationTarget;
 
 public sealed class WebSocketConnection(ConnectionContext connectionContext) : IAsyncDisposable
 {
-    private readonly static LinePipelineProtocol Potocol = new();
+    private static readonly LinePipelineProtocol Protocol = new();
     private readonly ProtocolReader _reader = connectionContext.CreateReader();
     private readonly ProtocolWriter _writer = connectionContext.CreateWriter();
 
@@ -28,14 +28,14 @@ public sealed class WebSocketConnection(ConnectionContext connectionContext) : I
 
     public ValueTask SendAsync(TextPackageInfo packageInfo, CancellationToken cancellationToken = default)
     {
-        return _writer.WriteAsync(Potocol, packageInfo, cancellationToken);
+        return _writer.WriteAsync(Protocol, packageInfo, cancellationToken);
     }
 
     public async IAsyncEnumerable<TextPackageInfo> RunAsync([EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         while (true)
         {
-            var readResult = await _reader.ReadAsync(Potocol, cancellationToken);
+            var readResult = await _reader.ReadAsync(Protocol, cancellationToken);
             if (readResult.IsCanceled)
                 throw new OperationCanceledException();
 
@@ -48,6 +48,11 @@ public sealed class WebSocketConnection(ConnectionContext connectionContext) : I
         }
     }
 
+    public void Detach()
+    {
+        _reader.Reset();
+    }
+    
     public void Close()
     {
         connectionContext.Abort();
