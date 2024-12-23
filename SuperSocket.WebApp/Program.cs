@@ -32,22 +32,16 @@ builder.Host.AsMultipleServerHostBuilder()
         config.Sources.Clear();
         config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
     })
-    .AddServer<ChatServer, TextPackageInfo, LinePipelineFilter>(builder1 =>
+    .AddServer<ChatServer, TextPackageInfo, LinePipelineFilter>(host =>
     {
-        builder1.ConfigureServerOptions((ctx, config) =>
-        {
-            return config.GetSection("TestServer1");
-        });
+        host.AsMinimalApiHostBuilder().ConfigureHostBuilder();
+        host.ConfigureServerOptions((ctx, config) => config.GetSection("TestServer1"));
     })
-    .AddServer<GameServer, TextPackageInfo, LinePipelineFilter>(builder1 =>
+    .AddServer<GameServer, TextPackageInfo, LinePipelineFilter>(host =>
     {
-        builder1.ConfigureServerOptions((ctx, config) =>
-        {
-            return config.GetSection("TestServer2");
-        });
-    })
-    .AsMinimalApiHostBuilder()
-    .ConfigureHostBuilder();
+        host.AsMinimalApiHostBuilder().ConfigureHostBuilder();
+        host.ConfigureServerOptions((ctx, config) => config.GetSection("TestServer2"));
+    });
 
 
 var app = builder.Build();

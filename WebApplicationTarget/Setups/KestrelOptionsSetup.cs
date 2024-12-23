@@ -12,8 +12,6 @@ internal sealed class KestrelOptionsSetup(IConfiguration configuration)
         var section = configuration.GetSection("Kestrel");
 
         options.Configure(section)
-            .Endpoint("Telnet", endpoint => endpoint.ListenOptions
-                .UseContainer()
-                .UseTelnet());
+            .Endpoint("Telnet", endpoint => endpoint.ListenOptions.UseTelnet());
     }
 }

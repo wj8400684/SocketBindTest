@@ -1,11 +1,16 @@
+using ServiceSelf;
 using WebApplicationTarget;
 using WebApplicationTarget.Dto;
 using WebApplicationTarget.Extensions;
 using WebApplicationTarget.Middlewares;
 using WebApplicationTarget.Setups;
 
+if (!ServiceHelper.UseServiceSelf(args))
+    return;
+
 var builder = WebApplication.CreateSlimBuilder(args);
 
+builder.Host.UseServiceSelf();
 builder.Services.AddConnections();
 builder.Services.AddConnectionContainer();
 builder.Services.AddSingleton<TelnetConnectionHandler>();
