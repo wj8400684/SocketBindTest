@@ -17,8 +17,8 @@ internal static class ServiceHelper
 
         Console.WriteLine($"execStart: {execStart}");
         
-        serviceOptions.Linux.Service["WorkingDirectory"] = workingDirectory;
-        serviceOptions.Linux.Service["ExecStart"] = execStart;
+        // serviceOptions.Linux.Service["WorkingDirectory"] = workingDirectory;
+        // serviceOptions.Linux.Service["ExecStart"] = execStart;
         // serviceOptions.Linux.Service["Environment"] = "ASPNETCORE_ENVIRONMENT=Production";
         // serviceOptions.Linux.Service["User"] = "root";
         // serviceOptions.Linux.Service["LimitMEMORY"] = "5120M";
