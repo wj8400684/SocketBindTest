@@ -10,6 +10,8 @@ builder.Services.AddConnections();
 builder.Services.AddConnectionContainer();
 builder.Services.AddSingleton<TelnetConnectionHandler>();
 builder.Services.AddSingleton<WebSocketConnectionHandler>();
+builder.Services.AddHostedService(s => s.GetRequiredService<WebSocketConnectionHandler>());
+
 builder.Services.ConfigureOptions<KestrelOptionsSetup>();
 builder.Services.ConfigureOptions<JsonOptionsSetup>();
 

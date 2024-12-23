@@ -7,8 +7,10 @@ namespace WebApplicationTarget;
 internal sealed class WebSocketConnectionHandler(
     IConnectionContainer container,
     ILogger<TelnetConnectionHandler> logger)
-    : ConnectionHandler
+    : ConnectionHandler, IHostedService
 {
+    private readonly CancellationTokenSource _cancellationTokenSource = new();
+
     public override async Task OnConnectedAsync(ConnectionContext context)
     {
         var transferFormat = context.Features.Get<ITransferFormatFeature>();
@@ -23,10 +25,10 @@ internal sealed class WebSocketConnectionHandler(
 
         try
         {
-            await foreach (var pack in connection.RunAsync())
+            await foreach (var pack in connection.RunAsync(_cancellationTokenSource.Token))
             {
                 logger.LogDebug($"Received message: {pack}");
-                await connection.SendAsync("ddffdgfgf\r\n"u8.ToArray(), CancellationToken.None);
+                await connection.SendAsync("ddffdgfgf\r\n"u8.ToArray(), _cancellationTokenSource.Token);
             }
         }
         catch (Exception e)
@@ -38,5 +40,16 @@ internal sealed class WebSocketConnectionHandler(
             container.Remove(context);
             logger.LogDebug($"[{context.RemoteEndPoint}]-[{context.ConnectionId}]：客户端断开连接");
         }
+    }
+
+    Task IHostedService.StartAsync(CancellationToken cancellationToken)
+    {
+        return Task.CompletedTask;
+    }
+
+    Task IHostedService.StopAsync(CancellationToken cancellationToken)
+    {
+        _cancellationTokenSource.Cancel();
+        return Task.CompletedTask;
     }
 }
