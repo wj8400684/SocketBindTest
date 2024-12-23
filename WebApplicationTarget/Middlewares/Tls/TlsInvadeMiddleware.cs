@@ -1,12 +1,11 @@
 using System.Buffers;
 using System.IO.Pipelines;
-using KestrelFramework;
 using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Http.Features;
 
 namespace WebApplicationTarget.Middlewares.Tls;
 
-internal sealed class TlsInvadeMiddleware : IKestrelMiddleware
+internal sealed class TlsInvadeMiddleware : KestrelFramework.IKestrelMiddleware
 {
     /// <summary>
     /// 执行中间件

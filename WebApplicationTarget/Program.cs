@@ -1,15 +1,11 @@
-using ServiceSelf;
 using WebApplicationTarget;
 using WebApplicationTarget.Dto;
 using WebApplicationTarget.Extensions;
 using WebApplicationTarget.Middlewares;
 using WebApplicationTarget.Setups;
 
-if (!Service.UseServiceSelf(args))
+if (!ServiceHelper.UseServiceSelf(args))
     return;
-
-// if (!ServiceHelper.UseServiceSelf(args))
-//     return;
 
 var builder = WebApplication.CreateSlimBuilder(args);
 

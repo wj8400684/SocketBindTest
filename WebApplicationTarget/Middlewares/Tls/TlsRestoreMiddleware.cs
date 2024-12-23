@@ -1,4 +1,3 @@
-using KestrelFramework;
 using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Http.Features;
 
@@ -7,7 +6,7 @@ namespace WebApplicationTarget.Middlewares.Tls;
 /// <summary>
 /// tls恢复中间件
 /// </summary>
-internal sealed class TlsRestoreMiddleware : IKestrelMiddleware
+internal sealed class TlsRestoreMiddleware : KestrelFramework.IKestrelMiddleware
 {
     /// <summary>
     /// 执行中间件
